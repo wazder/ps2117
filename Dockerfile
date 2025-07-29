@@ -4,15 +4,14 @@ FROM openjdk:21-jdk-slim
 # Set working directory
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml
-COPY mvnw pom.xml ./
-COPY .mvn .mvn
+# Install Maven
+RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
+
+# Copy pom.xml first for better caching
+COPY pom.xml ./
 
 # Copy source code
 COPY src src
-
-# Install Maven
-RUN apt-get update && apt-get install -y maven
 
 # Build the application
 RUN mvn clean package -DskipTests
