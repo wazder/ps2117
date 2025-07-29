@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="005-add-performance-indexes" author="performance.team">
+        <comment>Add indexes for frequently queried columns</comment>
+        
+        <!-- Users table indexes -->
+        <createIndex tableName="users" indexName="idx_users_username">
+            <column name="username"/>
+        </createIndex>
+        
+        <createIndex tableName="users" indexName="idx_users_email">
+            <column name="email"/>
+        </createIndex>
+        
+        <createIndex tableName="users" indexName="idx_users_role">
+            <column name="role"/>
+        </createIndex>
+        
+        <!-- Categories table indexes -->
+        <createIndex tableName="categories" indexName="idx_categories_name">
+            <column name="name"/>
+        </createIndex>
+        
+        <!-- Products table indexes -->
+        <createIndex tableName="products" indexName="idx_products_name">
+            <column name="name"/>
+        </createIndex>
+        
+        <createIndex tableName="products" indexName="idx_products_category">
+            <column name="category_id"/>
+        </createIndex>
+        
+        <createIndex tableName="products" indexName="idx_products_price">
+            <column name="price"/>
+        </createIndex>
+        
+        <!-- Composite index for product search -->
+        <createIndex tableName="products" indexName="idx_products_category_price">
+            <column name="category_id"/>
+            <column name="price"/>
+        </createIndex>
+        
+        <rollback>
+            <dropIndex tableName="users" indexName="idx_users_username"/>
+            <dropIndex tableName="users" indexName="idx_users_email"/>
+            <dropIndex tableName="users" indexName="idx_users_role"/>
+            <dropIndex tableName="categories" indexName="idx_categories_name"/>
+            <dropIndex tableName="products" indexName="idx_products_name"/>
+            <dropIndex tableName="products" indexName="idx_products_category"/>
+            <dropIndex tableName="products" indexName="idx_products_price"/>
+            <dropIndex tableName="products" indexName="idx_products_category_price"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
