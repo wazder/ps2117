@@ -17,14 +17,14 @@ const Products = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(10);
 
-  const initialProductState = {
+  const initialProductState = useMemo(() => ({
     name: '',
     description: '',
     price: '',
     stockQuantity: '',
     categoryId: '',
     base64Image: ''
-  };
+  }), []);
   
   const [newProduct, setNewProduct] = useState(initialProductState);
 
