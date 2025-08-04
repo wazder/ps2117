@@ -2,6 +2,10 @@ import axios from 'axios';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://ecom177-backend.onrender.com';
 
+console.log('Environment:', process.env.NODE_ENV);
+console.log('API_BASE_URL:', API_BASE_URL);
+console.log('REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
+
 // Create axios instance with base configuration
 const api = axios.create({
   baseURL: API_BASE_URL,
