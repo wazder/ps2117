@@ -17,9 +17,14 @@
             <column name="description" value="Electronic devices and gadgets"/>
         </insert>
         
+        <insert tableName="categories">
+            <column name="name" value="Clothing"/>
+            <column name="description" value="Fashion and apparel items"/>
+        </insert>
+        
         <rollback>
             <delete tableName="categories">
-                <where>name IN ('Books', 'Electronics')</where>
+                <where>name IN ('Books', 'Electronics', 'Clothing')</where>
             </delete>
         </rollback>
     </changeSet>
