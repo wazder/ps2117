@@ -10,8 +10,6 @@ const Cart = () => {
   const [shippingAddress, setShippingAddress] = useState('');
   const [showCheckout, setShowCheckout] = useState(false);
 
-  // const user = JSON.parse(localStorage.getItem('user') || '{}'); // Not currently used
-
   useEffect(() => {
     loadCartItems();
   }, []);

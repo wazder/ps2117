@@ -20,7 +20,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted with data:', formData);
     setLoading(true);
     setError('');
 

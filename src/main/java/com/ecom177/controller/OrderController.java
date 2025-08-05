@@ -24,32 +24,20 @@ public class OrderController {
     
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody OrderRequest request) {
-        try {
-            OrderResponse response = orderService.createOrder(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        OrderResponse response = orderService.createOrder(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     
     @GetMapping("/my-orders")
     public ResponseEntity<List<OrderResponse>> getMyOrders() {
-        try {
-            List<OrderResponse> orders = orderService.getUserOrders();
-            return ResponseEntity.ok(orders);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        List<OrderResponse> orders = orderService.getUserOrders();
+        return ResponseEntity.ok(orders);
     }
     
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponse> getOrderById(@PathVariable Long id) {
-        try {
-            OrderResponse order = orderService.getOrderById(id);
-            return ResponseEntity.ok(order);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+        OrderResponse order = orderService.getOrderById(id);
+        return ResponseEntity.ok(order);
     }
     
     @PutMapping("/{id}/status")
@@ -57,55 +45,35 @@ public class OrderController {
     public ResponseEntity<OrderResponse> updateOrderStatus(
             @PathVariable Long id, 
             @RequestParam Order.OrderStatus status) {
-        try {
-            OrderResponse response = orderService.updateOrderStatus(id, status);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+        OrderResponse response = orderService.updateOrderStatus(id, status);
+        return ResponseEntity.ok(response);
     }
     
     @GetMapping("/user/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<OrderResponse>> getUserOrders(@PathVariable Long userId) {
-        try {
-            List<OrderResponse> orders = orderService.getUserOrders(userId);
-            return ResponseEntity.ok(orders);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        List<OrderResponse> orders = orderService.getUserOrders(userId);
+        return ResponseEntity.ok(orders);
     }
     
     @GetMapping("/admin/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<OrderResponse>> getAllOrders() {
-        try {
-            List<OrderResponse> orders = orderService.getAllOrders();
-            return ResponseEntity.ok(orders);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        List<OrderResponse> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
     }
     
     @GetMapping("/admin/pending")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<OrderResponse>> getPendingOrders() {
-        try {
-            List<OrderResponse> orders = orderService.getOrdersByStatus(Order.OrderStatus.PENDING);
-            return ResponseEntity.ok(orders);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        List<OrderResponse> orders = orderService.getOrdersByStatus(Order.OrderStatus.PENDING);
+        return ResponseEntity.ok(orders);
     }
     
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
-        try {
-            orderService.deleteOrder(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+        orderService.deleteOrder(id);
+        return ResponseEntity.noContent().build();
     }
 }

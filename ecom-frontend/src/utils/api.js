@@ -49,17 +49,12 @@ export const endpoints = {
   
   // Products
   products: '/api/products',
-  productById: (id) => `/api/products/${id}`,
-  searchProducts: '/api/products/search',
   
   // Categories
   categories: '/api/categories',
-  categoryById: (id) => `/api/categories/${id}`,
   
   // Orders
   orders: '/api/orders',
   myOrders: '/api/orders/my-orders',
-  orderById: (id) => `/api/orders/${id}`,
-  updateOrderStatus: (id) => `/api/orders/${id}/status`,
-  userOrders: (userId) => `/api/orders/user/${userId}`
+  updateOrderStatus: (id) => `/api/orders/${id}/status`
 };

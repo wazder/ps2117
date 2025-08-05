@@ -3,6 +3,9 @@ import { showToast } from './Toast';
 import './Products.css';
 import api from '../utils/api';
 
+// Constants
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -71,9 +74,8 @@ const Products = () => {
   const handleImageChange = useCallback((e) => {
     const file = e.target.files[0];
     if (file) {
-      // 10MB boyut kontrolü (10 * 1024 * 1024 bytes)
-      const maxSize = 10 * 1024 * 1024;
-      if (file.size > maxSize) {
+      // File size validation
+      if (file.size > MAX_FILE_SIZE) {
         showToast('Image size must be less than 10MB', 'error');
         e.target.value = '';
         return;

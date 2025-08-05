@@ -34,12 +34,15 @@ function App() {
                 </Link>
                 <Link to="/cart" className="nav-link">
                   Cart 
-                  {localStorage.getItem('cart') && 
-                    JSON.parse(localStorage.getItem('cart')).length > 0 && (
-                    <span className="cart-badge">
-                      {JSON.parse(localStorage.getItem('cart')).length}
-                    </span>
-                  )}
+                  {(() => {
+                    const cart = localStorage.getItem('cart');
+                    const cartItems = cart ? JSON.parse(cart) : [];
+                    return cartItems.length > 0 && (
+                      <span className="cart-badge">
+                        {cartItems.length}
+                      </span>
+                    );
+                  })()}
                 </Link>
               </nav>
             )}

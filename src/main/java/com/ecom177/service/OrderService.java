@@ -6,6 +6,7 @@ import com.ecom177.entity.Order;
 import com.ecom177.entity.OrderItem;
 import com.ecom177.entity.Product;
 import com.ecom177.entity.User;
+import com.ecom177.exception.ResourceNotFoundException;
 import com.ecom177.repository.OrderRepository;
 import com.ecom177.repository.OrderItemRepository;
 import com.ecom177.repository.ProductRepository;
@@ -37,9 +38,7 @@ public class OrderService {
     }
     
     public OrderResponse createOrder(OrderRequest request) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = getCurrentUser();
         
         Order order = new Order();
         order.setUser(user);
@@ -51,10 +50,10 @@ public class OrderService {
         
         for (OrderRequest.OrderItemRequest itemRequest : request.getOrderItems()) {
             Product product = productRepository.findById(itemRequest.getProductId())
-                    .orElseThrow(() -> new RuntimeException("Product not found: " + itemRequest.getProductId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not found: " + itemRequest.getProductId()));
             
             if (product.getStockQuantity() < itemRequest.getQuantity()) {
-                throw new RuntimeException("Insufficient stock for product: " + product.getName());
+                throw new ResourceNotFoundException("Insufficient stock for product: " + product.getName());
             }
             
             OrderItem orderItem = new OrderItem();
@@ -94,11 +93,11 @@ public class OrderService {
     
     public OrderResponse getOrderById(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
         
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         if (!order.getUser().getUsername().equals(username)) {
-            throw new RuntimeException("Access denied");
+            throw new ResourceNotFoundException("Access denied to order: " + orderId);
         }
         
         return convertToResponse(order);
@@ -106,7 +105,7 @@ public class OrderService {
     
     public OrderResponse updateOrderStatus(Long orderId, Order.OrderStatus status) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
         
         order.setStatus(status);
         Order updatedOrder = orderRepository.save(order);
@@ -132,7 +131,7 @@ public class OrderService {
     
     public void deleteOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
         
         // Restore product stock
         for (OrderItem item : order.getOrderItems()) {
@@ -173,5 +172,11 @@ public class OrderService {
                 orderItem.getUnitPrice(),
                 orderItem.getTotalPrice()
         );
+    }
+    
+    private User getCurrentUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
     }
 }

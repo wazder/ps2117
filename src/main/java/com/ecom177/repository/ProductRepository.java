@@ -10,10 +10,6 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findByNameContainingIgnoreCase(String name);
-    List<Product> findByCategoryId(Long categoryId);
-    List<Product> findByCategoryIdIn(List<Long> categoryIds);
-    
     @Query("SELECT p FROM Product p WHERE " +
            "(:name IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
            "(:categoryIds IS NULL OR p.category.id IN :categoryIds)")
