@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import api from '../utils/api';
 import './Auth.css';
 
 const Register = () => {
@@ -28,7 +28,7 @@ const Register = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/register', formData);
+      const response = await api.post('/api/auth/register', formData);
       
       // Token'ı localStorage'a kaydet
       localStorage.setItem('token', response.data.token);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { showToast } from './Toast';
+import api from '../utils/api';
 import './Cart.css';
 
 const Cart = () => {
@@ -64,7 +64,6 @@ const Cart = () => {
     setError('');
 
     try {
-      const token = localStorage.getItem('token');
       const orderData = {
         orderItems: cartItems.map(item => ({
           productId: item.id,
@@ -73,9 +72,7 @@ const Cart = () => {
         shippingAddress: shippingAddress
       };
 
-      await axios.post('http://localhost:8080/api/orders', orderData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.post('/api/orders', orderData);
 
       clearCart();
       setShippingAddress('');
