@@ -27,6 +27,8 @@ const Products = () => {
   }), []);
   
   const [newProduct, setNewProduct] = useState(initialProductState);
+  const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
+  const [newCategory, setNewCategory] = useState({ name: '', description: '' });
 
   const user = useMemo(() => JSON.parse(localStorage.getItem('user') || '{}'), []);
 
@@ -87,6 +89,23 @@ const Products = () => {
       reader.readAsDataURL(file);
     }
   }, []);
+
+  const handleCategorySubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await api.post('/api/categories', newCategory);
+      setCategories([...categories, response.data]);
+      setNewCategory({ name: '', description: '' });
+      setShowAddCategoryForm(false);
+      showToast('Category added successfully!', 'success');
+    } catch (err) {
+      console.error('Category creation error:', err);
+      showToast('Failed to add category', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -229,16 +248,64 @@ const Products = () => {
         </div>
         
         {user.role === 'ADMIN' && (
-          <button 
-            onClick={() => setShowAddForm(!showAddForm)}
-            className="add-product-btn"
-          >
-            {showAddForm ? 'Cancel' : 'Add Product'}
-          </button>
+          <div className="admin-buttons">
+            <button 
+              onClick={() => setShowAddCategoryForm(!showAddCategoryForm)}
+              className="add-category-btn"
+            >
+              {showAddCategoryForm ? 'Cancel' : 'Add Category'}
+            </button>
+            <button 
+              onClick={() => setShowAddForm(!showAddForm)}
+              className="add-product-btn"
+            >
+              {showAddForm ? 'Cancel' : 'Add Product'}
+            </button>
+          </div>
         )}
       </div>
 
       {error && <div className="error-message">{error}</div>}
+
+      {showAddCategoryForm && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3>Add New Category</h3>
+              <button 
+                onClick={() => setShowAddCategoryForm(false)}
+                className="close-btn"
+              >
+                ×
+              </button>
+            </div>
+            <form onSubmit={handleCategorySubmit} className="category-form">
+              <div className="form-group">
+                <label>Category Name:</label>
+                <input
+                  type="text"
+                  value={newCategory.name}
+                  onChange={(e) => setNewCategory({...newCategory, name: e.target.value})}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Description:</label>
+                <textarea
+                  value={newCategory.description}
+                  onChange={(e) => setNewCategory({...newCategory, description: e.target.value})}
+                  rows="3"
+                />
+              </div>
+              <div className="form-actions">
+                <button type="submit" disabled={loading}>
+                  {loading ? 'Adding...' : 'Add Category'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {(showAddForm || showUpdateForm) && (
         <div className="modal-overlay">

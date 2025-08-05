@@ -50,6 +50,25 @@
   width: 150px;
 }
 
+.admin-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.add-category-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-category-btn:hover {
+  background-color: #218838;
+}
+
 .add-product-btn {
   background: #28a745;
   color: white;
