@@ -18,18 +18,13 @@
         </insert>
         
         <insert tableName="categories">
-            <column name="name" value="Tech"/>
-            <column name="description" value="Technology and software products"/>
-        </insert>
-        
-        <insert tableName="categories">
             <column name="name" value="Clothing"/>
             <column name="description" value="Fashion and apparel items"/>
         </insert>
         
         <rollback>
             <delete tableName="categories">
-                <where>name IN ('Books', 'Electronics', 'Tech', 'Clothing')</where>
+                <where>name IN ('Books', 'Electronics', 'Clothing')</where>
             </delete>
         </rollback>
     </changeSet>
